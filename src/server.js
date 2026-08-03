@@ -7,7 +7,8 @@ import taskRoutes from './routes/tasks.js'
 import authRoutes from './Authentication/Auth.js'
 dotenv.config();
 
-const app = express.Router();
+const app =  express()
+
 
 app.use(cors());
 app.use(express.json());

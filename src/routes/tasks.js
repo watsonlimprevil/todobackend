@@ -1,5 +1,5 @@
 import express from 'express';
-import requireAuth from '../middleware/requireAuth.js';
+import requireAuth from '../Middleware/Authe.js';
 import { memoryDB } from '../memoryDB.js';
 
 const router = express.Router();
