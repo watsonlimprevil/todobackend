@@ -1,42 +1,56 @@
 import express from 'express';
-import { pool } from '../db.js';
 import requireAuth from '../middleware/requireAuth.js';
+import { memoryDB } from '../memoryDB.js';
 
 const router = express.Router();
 
 // Create task
-router.post('/:listId', requireAuth, async (req, res) => {
+router.post('/:listId', requireAuth, (req, res) => {
   const { title, description, priority, due_date, position } = req.body;
   const { listId } = req.params;
 
-  try {
-    const result = await pool.query(
-      `INSERT INTO tasks (list_id, title, description, priority, due_date, position)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING *`,
-      [listId, title, description, priority, due_date, position]
-    );
+  const newTask = {
+    id: Date.now(), // simple unique ID
+    list_id: parseInt(listId),
+    title,
+    description,
+    priority,
+    due_date,
+    position
+  };
 
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: 'server error' });
-  }
+  memoryDB.tasks.push(newTask);
+
+  res.json(newTask);
 });
 
 // Get tasks for list
-router.get('/:listId', requireAuth, async (req, res) => {
+router.get('/:listId', requireAuth, (req, res) => {
   const { listId } = req.params;
 
-  try {
-    const result = await pool.query(
-      `SELECT * FROM tasks WHERE list_id = $1 ORDER BY position ASC`,
-      [listId]
-    );
+  const tasks = memoryDB.tasks
+    .filter(t => t.list_id === parseInt(listId))
+    .sort((a, b) => a.position - b.position);
 
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'server error' });
+  res.json(tasks);
+});
+
+// Move task (drag & drop)
+router.patch('/tasks/:taskId/move', (req, res) => {
+  const { taskId } = req.params;
+  const { toListId, position } = req.body;
+
+  const task = memoryDB.tasks.find(t => t.id === parseInt(taskId));
+
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' });
   }
+
+  task.list_id = parseInt(toListId);
+  task.position = position;
+
+  res.json(task);
 });
 
 export default router;
+
