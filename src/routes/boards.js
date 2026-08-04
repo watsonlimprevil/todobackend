@@ -31,6 +31,7 @@ router.get('/', requireAuth , async(req,res)=>{
         res.json(result.rows[0])
     }catch(error){
         res.status(500).json({error :'server error'})
+        console.error(error)
     }
 })
 
