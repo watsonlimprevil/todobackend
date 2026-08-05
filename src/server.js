@@ -41,6 +41,8 @@ app.use('/auth', authRoutes);
 app.use('/boards', boardRoutes);
 app.use('/lists', listRoutes);
 app.use('/tasks', taskRoutes);
-app.listen(5000 , ()=>{
-    console.log('backend is started on port 5000')
-})
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});
