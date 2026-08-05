@@ -1,7 +1,7 @@
 import express from 'express';
 import requireAuth from '../Middleware/Authe.js';
-import { memoryDB } from '../memoryDB.js';
 
+import { pool } from '../db.js';
 const router = express.Router();
 
 // Create task
