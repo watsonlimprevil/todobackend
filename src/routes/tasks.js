@@ -53,7 +53,7 @@ router.get('/:listId', requireAuth, async (req, res) => {
 
 
 // Move task (drag & drop)
-router.patch('/tasks/:taskId/move', requireAuth, async (req, res) => {
+router.patch('/:taskId/move', requireAuth, async (req, res) => {
   const { taskId } = req.params;
   const { toListId, position } = req.body;
 
