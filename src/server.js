@@ -10,7 +10,11 @@ dotenv.config();
 const app =  express()
 
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/boards', boardRoutes);
