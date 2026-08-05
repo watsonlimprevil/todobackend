@@ -10,7 +10,7 @@ router.post('/:boardIn' , requireAuth , async(req,res)=>{
 
     try{
         const result = await pool.query(
-        `INSERT INTO lists (board_in , title , position)
+        `INSERT INTO lists (board_id , title , position)
          VALUES ($1 , $2 , $3)
          RETURNING *`
         ,[boardIn , title , position])
@@ -27,7 +27,7 @@ router.get('/:boardIn' , requireAuth , async(req,res)=>{
 
     try{
         const result = await pool.query(
-        `SELECT * FROM lists WHERE board_in = $1 ORDER BY position 
+        `SELECT * FROM lists WHERE board_id = $1 ORDER BY position 
          ASC`
         ,[boardIn])
 
