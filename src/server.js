@@ -11,10 +11,31 @@ const app =  express()
 
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
+  origin: (origin, callback) => {
+    const allowed = [
+      "http://localhost:5173",
+      /\.vercel\.app$/   // allow ANY Vercel deployment
+    ];
+
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isAllowed = allowed.some(rule => {
+      if (rule instanceof RegExp) return rule.test(origin);
+      return rule === origin;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS" , "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/boards', boardRoutes);
