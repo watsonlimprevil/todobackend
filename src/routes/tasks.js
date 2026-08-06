@@ -77,6 +77,25 @@ router.patch('/:taskId/move', requireAuth, async (req, res) => {
   }
 });
 
+router.patch('/:taskId', requireAuth , async(req,res)=>{
+    const { taskId } = req.params;
+    const { title , description } = req.body;
+    try{
+        const result = await pool.query(
+            `UPDATE tasks 
+            SET title = $1, 
+             description = $2
+             WHERE id = $3 
+             RETURNING *`
+            ,[title , description , taskId]
+        );
+        res.json(result.rows[0])
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error : 'server error'})
+    }
+})
+
 router.delete('/:taskId' , requireAuth , async(req,res) =>{
     const { taskId } = req.params;
 
