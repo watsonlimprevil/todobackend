@@ -53,4 +53,17 @@ router.patch('/:listId' , requireAuth , async(req,res)=>{
     }
 })
 
+router.delete('/:listIId' , requireAuth , async(req,res) =>{
+    const { listId } = req.params;
+
+    try{
+        await pool.query(`DELETE FROM tasks WHERE list_id = $1` , [listId]);
+        await pool.query(`DELETE from lists where id = $1`, [listId])
+        res.json({success:true})
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error : 'server error'})
+    }
+})
+
 export default router;
