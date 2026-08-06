@@ -40,6 +40,27 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+router.get('/:boardId', requireAuth, async (req, res) => {
+  const { boardId } = req.params;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM boards WHERE id = $1`,
+      [boardId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Board not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
+
 router.delete('/:boardId' , requireAuth , async(req,res) => {
     const { boardId } = req.params;
     try{
