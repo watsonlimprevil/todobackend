@@ -79,15 +79,16 @@ router.patch('/:taskId/move', requireAuth, async (req, res) => {
 
 router.patch('/:taskId', requireAuth , async(req,res)=>{
     const { taskId } = req.params;
-    const { title , description } = req.body;
+    const { title , description , priority } = req.body;
     try{
         const result = await pool.query(
             `UPDATE tasks 
             SET title = $1, 
              description = $2
-             WHERE id = $3 
+             priority = $3
+             WHERE id = $4
              RETURNING *`
-            ,[title , description , taskId]
+            ,[title , description , priority , taskId]
         );
         res.json(result.rows[0])
     }catch(error){
