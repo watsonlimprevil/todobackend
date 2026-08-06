@@ -37,4 +37,20 @@ router.get('/:boardIn' , requireAuth , async(req,res)=>{
     }
 })
 
+router.patch('/:listId' , requireAuth , async(req,res)=>{
+    const {listId} = req.params;
+    const { title } = req.body;
+
+    try{
+        const result = await pool.query(
+            `UPDATE lists SET title = $1 WHERE id = $2 RETURNING *`
+        ,[title , listId]);
+
+        res.json(result.rows[0]);
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error : 'server error'})
+    }
+})
+
 export default router;
