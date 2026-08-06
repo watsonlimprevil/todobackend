@@ -41,9 +41,9 @@ router.get('/', requireAuth, async (req, res) => {
 });
 
 router.delete('/:boardId' , requireAuth , async(req,res) => {
-    const { boardID } = req.params;
+    const { boardId } = req.params;
     try{
-    await pool.query(`DELETE from boards where id = $1`, [boardID]);
+    await pool.query(`DELETE from boards where id = $1`, [boardId]);
     res.json({success : true})
 }catch(error){
     console.error(error);
