@@ -77,6 +77,19 @@ router.patch('/:taskId/move', requireAuth, async (req, res) => {
   }
 });
 
+router.delete('/:taskId' , requireAuth , async(req,res) =>{
+    const { taskId } = req.params;
 
+    try{
+        await pool.query(
+            `DELETE FROM tasks WHERE id = $1`
+        ,[taskId]);
+
+        res.json({ success :true})
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error : 'server error'})
+    }
+})
 export default router;
 
