@@ -4,7 +4,7 @@ import requireAuth from '../Middleware/Authe.js';
 
 const router = express.Router();
 
-router.get('/:taskId' , requireAuth , async(req,res)=>{
+router.get('/:taskId' , async(req,res)=>{
     const { taskId } = req.params;
 
     try{
