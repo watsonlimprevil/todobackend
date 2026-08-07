@@ -5,7 +5,7 @@ import requireAuth from '../Middleware/Authe.js';
 const router = express.Router();
 
 // GET subtasks
-router.get('/:taskId', requireAuth, async (req, res) => {
+router.get('/:taskId',  async (req, res) => {
   const { taskId } = req.params;
 
   try {
@@ -21,7 +21,7 @@ router.get('/:taskId', requireAuth, async (req, res) => {
 });
 
 // POST subtask
-router.post('/', requireAuth, async (req, res) => {
+router.post('/',  async (req, res) => {
   const { taskId, title } = req.body;
 
   try {
@@ -39,7 +39,7 @@ router.post('/', requireAuth, async (req, res) => {
 });
 
 // PATCH subtask
-router.patch('/:id', requireAuth, async (req, res) => {
+router.patch('/:id',  async (req, res) => {
   const { id } = req.params;
   const { completed } = req.body;
 
@@ -61,7 +61,7 @@ router.patch('/:id', requireAuth, async (req, res) => {
 });
 
 // DELETE subtask
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
