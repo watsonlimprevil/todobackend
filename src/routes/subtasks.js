@@ -20,7 +20,7 @@ router.get('/:taskId' , async(req,res)=>{
     }
 })
 
-router.post('/' , requireAuth , async(req,res) =>{
+router.post('/' , async(req,res) =>{
     const { taskId , title } = req.body;
 
     try{
