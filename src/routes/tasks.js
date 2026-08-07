@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Create task
 router.post('/:listId', requireAuth, async (req, res) => {
-  const { title, description, priority, due_date } = req.body;
+  const { title, description, priority, due_date , completed = false } = req.body;
   const { listId } = req.params;
 
   try {
@@ -19,10 +19,10 @@ router.post('/:listId', requireAuth, async (req, res) => {
 
     // Insert into your existing tasks table
     const insertResult = await pool.query(
-      `INSERT INTO tasks (list_id, title, description, priority, due_date, position)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO tasks (list_id, title, description, priority, due_date, position, completed)
+       VALUES ($1, $2, $3, $4, $5, $6 , $7)
        RETURNING *`,
-      [listId, title, description, priority, due_date, position]
+      [listId, title, description, priority, due_date, position , completed]
     );
 
     res.json(insertResult.rows[0]);
@@ -79,17 +79,22 @@ router.patch('/:taskId/move', requireAuth, async (req, res) => {
 
 router.patch('/:taskId', requireAuth , async(req,res)=>{
     const { taskId } = req.params;
-    const { title , description , priority , due_date } = req.body;
+    let { title , description , priority , due_date , completed } = req.body;
+
+    // ⭐ Force boolean conversion
+    completed = completed === true || completed === 'true';
+
     try{
         const result = await pool.query(
             `UPDATE tasks 
             SET title = $1, 
              description = $2,
              priority = $3,
-             due_date = $4
-             WHERE id = $5
-             RETURNING *`
-            ,[title , description , priority , due_date , taskId]
+             due_date = $4,
+             completed = $5
+             WHERE id = $6
+             RETURNING *`,
+            [title , description , priority , due_date , completed, taskId]
         );
         res.json(result.rows[0])
     }catch(error){
