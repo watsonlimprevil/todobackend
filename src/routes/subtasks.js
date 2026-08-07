@@ -9,8 +9,10 @@ router.get('/:taskId' , requireAuth , async(req,res)=>{
 
     try{
         const result = await pool.query(
-            `SELECT * FROM subtasks WHERE task_id = $1 ORDER BY id ASC`
-        ,[taskId]);
+    `SELECT * FROM subtasks WHERE task_id = $1 ORDER BY id ASC`,
+    [taskId]
+     );
+
         res.json(result.rows)
     }catch(error){
         console.error(error);
@@ -38,12 +40,14 @@ router.patch('/:id' , requireAuth , async(req,res)=>{
     const { id } = req.params;
     const { completed } = req.body;
     try{
-        const result = await pool.query(
-            `UPDATE subtasks 
-            Set completed = $1,
-            updated_at = NOW()
-            WHERE id = $2`
-       ,[completed , id] );
+       const result = await pool.query(
+    `UPDATE subtasks 
+     SET completed = $1,
+     updated_at = NOW()
+     WHERE id = $2`,
+    [completed, id]
+);
+
 
        res.json(result.rows[0])
     }catch(error){
