@@ -5,7 +5,7 @@ import boardRoutes from './routes/boards.js';
 import listRoutes from './routes/lists.js';
 import taskRoutes from './routes/tasks.js'
 import authRoutes from './Authentication/Auth.js'
-import commentRouter from './routes/comments.js'
+import commentRoutes from './routes/comments.js'
 dotenv.config();
 
 const app =  express()
@@ -42,6 +42,7 @@ app.use('/auth', authRoutes);
 app.use('/boards', boardRoutes);
 app.use('/lists', listRoutes);
 app.use('/tasks', taskRoutes);
+app.use('/comments' , commentRoutes)
 
 const PORT = process.env.PORT || 5000;
 
