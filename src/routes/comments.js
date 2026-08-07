@@ -51,3 +51,4 @@ router.delete('/:id' , requireAuth , async(req,res) =>{
     res.status(500).json({error : 'Failed to delete comment'})
 }
 })
+export default router
