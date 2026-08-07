@@ -39,22 +39,24 @@ router.post('/' , async(req,res) =>{
 router.patch('/:id' , requireAuth , async(req,res)=>{
     const { id } = req.params;
     const { completed } = req.body;
+
     try{
-       const result = await pool.query(
-    `UPDATE subtasks 
-     SET completed = $1,
-     updated_at = NOW()
-     WHERE id = $2`,
-    [completed, id]
-);
+        const result = await pool.query(
+            `UPDATE subtasks 
+             SET completed = $1,
+             updated_at = NOW()
+             WHERE id = $2
+             RETURNING *`,
+            [completed , id]
+        );
 
-
-       res.json(result.rows[0])
+        res.json(result.rows[0]);
     }catch(error){
         console.error(error);
-        res.status(500).json({error : 'Failed to update subtasks'})
+        res.status(500).json({error : 'Failed to update subtasks'});
     }
-})
+});
+
 
 
 router.delete('/:id' , requireAuth , async(req,res)=>{
