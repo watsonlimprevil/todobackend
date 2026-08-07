@@ -72,4 +72,21 @@ router.delete('/:boardId' , requireAuth , async(req,res) => {
 }
 })
 
+
+router.patch('/boards/:id' , async(req,res)=>{
+    const { id } = req.params;
+    const { title } = req.body;
+
+    try{
+        const result = await pool.query(
+            `UPDATE boards SET title = $1 WHERE id  = $2 RETURNING *`
+       ,[title , id] 
+    );
+
+    res.json(result.rows[0])
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error :'server error'})
+    }
+})
 export default router;
