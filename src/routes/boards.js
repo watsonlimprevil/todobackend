@@ -27,18 +27,32 @@ router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.userId;
 
   try {
-    const result = await pool.query(
+    // Get all boards for the user
+    const boardsResult = await pool.query(
       `SELECT * FROM boards WHERE user_id = $1`,
       [userId]
     );
 
-    // ⭐ Return an array, not a single object
-    res.json(result.rows);
+    const boards = boardsResult.rows;
+
+    // For each board, fetch its lists
+    for (let board of boards) {
+      const listsResult = await pool.query(
+        `SELECT * FROM lists WHERE board_id = $1`,
+        [board.id]
+      );
+
+      board.lists = listsResult.rows; // attach lists to board
+    }
+
+    res.json(boards);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'server error' });
   }
 });
+
 
 router.get('/:boardId', requireAuth, async (req, res) => {
   const { boardId } = req.params;
